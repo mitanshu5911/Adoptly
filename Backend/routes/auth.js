@@ -23,5 +23,27 @@ router.post('/signup',async (req,res) => {
         console.log(error.message);
     }
 });
+router.post('/login',async (req,res) => {
+    try {
+        const {email,password} = req.body;
+        
+        const user = await User.findOne({email});
+        if(!user) return res.status(400).json({msg:'Invalid credentials'});
 
+        const isMatch = await bcrypt.compare(password,user.password);
+        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+
+        const payload = { user: { id: user._id, userType: user.userType, email: user.email } };
+
+        jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        if (err) throw err;
+      //=== Return the complete user object with _id, email, and userType
+        console.log("login");
+        res.json({ token, user: { _id: user._id, email: user.email, userType: user.userType, name:user.name } });
+    });
+    } catch (error) {
+        console.error('Login error:', error.message);
+        res.status(500).send('Server error');
+    }
+})
 module.exports = router;

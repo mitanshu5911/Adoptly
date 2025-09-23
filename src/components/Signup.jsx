@@ -14,7 +14,7 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -23,16 +23,15 @@ function Signup() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:5000/api/signup",{
-            name,
-            email,
-            password
-        });
-        alert(response.data.msg || "Signup successful!"); // or wherever you want to redirect
-        navigate("/login");
-
+      const response = await axios.post("http://localhost:5000/api/signup", {
+        name,
+        email,
+        password,
+      });
+      alert(response.data.msg || "Signup successful!"); // or wherever you want to redirect
+      navigate("/login");
     } catch (error) {
-        if (error.response && error.response.data.msg) {
+      if (error.response && error.response.data.msg) {
         alert(error.response.data.msg);
       } else {
         alert("Something went wrong. Please try again.");
@@ -55,7 +54,7 @@ function Signup() {
           backgroundColor: "rgba(255, 255, 255, 0.3)",
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
-          borderColor: "rgba(0, 0, 0, 0.18)",
+          borderColor: "rgba(0, 0, 0, 0.13)",
         }}
       >
         <h2 className="text-gray-700 text-lg mb-2">JOIN THE ADVENTURE</h2>
