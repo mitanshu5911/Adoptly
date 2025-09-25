@@ -9,12 +9,14 @@ import { motion } from "framer-motion"; // ✅ for animations
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {login} = useContext(AuthContext);
+  const navigate = useNavigate();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -30,6 +32,7 @@ const Login = () => {
         console.log(user._id);
         alert("Logedd in");
         login(user,token);
+        navigate("/dashboard");
     } catch (err) {
       console.log(err.response?.data?.msg || "Login failed. Please try again.");   
     }
@@ -92,7 +95,7 @@ const Login = () => {
         >
           {/* Email input */}
           <motion.div
-            className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-green-700 transition-all"
+            className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-gray-800 transition-all"
             whileFocus={{ scale: 1.03 }}
           >
             <input
@@ -108,7 +111,7 @@ const Login = () => {
 
           {/* Password input */}
           <motion.div
-            className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-green-700 transition-all"
+            className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-gray-700 transition-all"
             whileFocus={{ scale: 1.03 }}
           >
             <input
@@ -134,12 +137,21 @@ const Login = () => {
           {/* Login Button */}
           <motion.button
             type="submit"
-            className="bg-green-700 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-green-800 transition-colors"
+            className="bg-green-700 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-green-900 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Login
           </motion.button>
+
+          <motion.div
+            onClick={() =>navigate("/signup")}
+            className="cursor-pointer text-gray-500 m-auto"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            New User?<u> Register Now</u>          
+            </motion.div>
         </motion.form>
       </motion.div>
     </div>

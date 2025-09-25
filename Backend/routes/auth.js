@@ -35,7 +35,7 @@ router.post('/login',async (req,res) => {
 
         const payload = { user: { id: user._id, userType: user.userType, email: user.email } };
 
-        jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        jwt.sign(payload, JWT_SECRET, { expiresIn: '1min' }, (err, token) => {
         if (err) throw err;
       //=== Return the complete user object with _id, email, and userType
         console.log("login");

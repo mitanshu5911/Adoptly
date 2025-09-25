@@ -62,7 +62,7 @@ function Signup() {
 
         <form onSubmit={handleSignUp} className="flex flex-col gap-4 w-96">
           {/* Name Input */}
-          <div className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-gray-800 transition-all">
+          <div className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-green-900 transition-all">
             <input
               type="text"
               value={name}
@@ -71,11 +71,11 @@ function Signup() {
               placeholder="Name"
               required
             />
-            <UserIcon className="h-5 w-5 absolute right-3 text-gray-500 pointer-events-none" />
+            <UserIcon className="h-5 w-5 absolute right-3 text-green-900 pointer-events-none" />
           </div>
 
           {/* Email Input */}
-          <div className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-gray-800 transition-all">
+          <div className="relative flex items-center border border-gray-300 rounded-lg has-[:focus]:ring-2 has-[:focus]:ring-green-900 transition-all">
             <input
               type="email"
               value={email}
@@ -110,7 +110,7 @@ function Signup() {
           </div>
           <button
             type="submit"
-            className="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-gray-900 transition-colors"
+            className="bg-green-700 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-green-900 transition-colors"
           >
             Sign Up
           </button>
