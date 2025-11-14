@@ -26,4 +26,26 @@ router.get("/getpet", async (req, res) => {
   }
 });
 
+router.get("/mypets", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const pets = await PostPet.find({ userId });
+    res.status(200).json(pets);
+  } catch (err) {
+    console.error("Error fetching user's pets:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await PostPet.findByIdAndDelete(id);
+    res.status(200).json({ msg: "Pet deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting pet:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
 module.exports = router;

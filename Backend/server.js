@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/api', require('./routes/auth'));
 app.use('/api',require('./routes/Pet'));
+app.use('/api',require('./routes/request') );
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

@@ -43,7 +43,7 @@ function Dashboard() {
 
 
   return (
-    <div className="p-4">
+    <div className="p-4 " style={{ backgroundColor: "#DBF2AB" }}>
       <h1 className="text-2xl font-bold mb-4">Adopt Pet</h1>
 
       {/* Preview pets */}

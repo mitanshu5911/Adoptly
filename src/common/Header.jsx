@@ -40,25 +40,25 @@ const Header = () => {
             Post
           </NavLink>
           <NavLink
-            to={getProtectedLink("/about")}
+            to={getProtectedLink("/requests")}
             className={({ isActive }) =>
               `transition hover:text-teal-400 ${
                  isActive&&isAuthenticated ? "text-teal-400 font-semibold border-b-2 border-teal-400" : ""
               }`
             }
           >
-            About
+            Requests
           </NavLink>
 
           <NavLink
-            to={getProtectedLink("/pets")}
+            to={getProtectedLink("/yourPet")}
             className={({ isActive }) =>
               `transition hover:text-teal-400 ${
                  isActive&&isAuthenticated ? "text-teal-400 font-semibold border-b-2 border-teal-400" : ""
               }`
             }
           >
-            Pets
+           Your Pets
           </NavLink>
 
           <NavLink

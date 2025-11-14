@@ -39,11 +39,19 @@ router.post('/login',async (req,res) => {
         if (err) throw err;
       //=== Return the complete user object with _id, email, and userType
         console.log("login");
-        res.json({ token, user: { _id: user._id, email: user.email, userType: user.userType, name:user.name } });
+        res.json({ token, user: { _id: user._id, email: user.email, name:user.name } });
     });
     } catch (error) {
         console.error('Login error:', error.message);
         res.status(500).send('Server error');
+    }
+})
+
+router.delete("/deleteacc", async (req,res) =>{
+    try{
+        
+    }catch(error){
+
     }
 })
 module.exports = router;
