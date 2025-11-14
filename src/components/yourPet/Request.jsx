@@ -1,8 +1,10 @@
+// Request.jsx
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
-import RequestCard from "./RequestCard"; // For received requests
-import SentRequestCard from "./SentRequestCard"; // ✅ New card for sent requests
+import RequestCard from "./RequestCard";
+import SentRequestCard from "./SentRequestCard";
+import ChatBox from "../chat/ChatBox";
 import { motion } from "framer-motion";
 
 function Request() {
@@ -10,51 +12,60 @@ function Request() {
   const [requestsReceived, setRequestsReceived] = useState([]);
   const [requestsSent, setRequestsSent] = useState([]);
   const [activeTab, setActiveTab] = useState("received");
+  const [chatOpen, setChatOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Fetch all requests once
-  useEffect(() => {
-    const fetchRequests = async () => {
-      if (!user || !user._id) return;
-      setLoading(true);
-      setError("");
+  const fetchRequests = async () => {
+    if (!user || !user._id) return;
+    setLoading(true);
+    setError("");
 
-      try {
-        const res = await axios.get("http://localhost:5000/api/getRequest", {
-          params: { userId: user._id },
-        });
+    try {
+      const res = await axios.get("http://localhost:5000/api/getRequest", {
+        params: { userId: user._id },
+      });
 
-        if (res.data && res.data.success) {
-          const allRequests = res.data.data || [];
-          setRequestsReceived(
-            allRequests.filter(
-              (r) => (r.ownerId?._id || r.ownerId) === user._id
-            )
-          );
-          setRequestsSent(
-            allRequests.filter(
-              (r) => (r.requesterId?._id || r.requesterId) === user._id
-            )
-          );
-        } else {
-          setError(res.data.message || "Failed to fetch requests");
-        }
-      } catch (err) {
-        console.error("Error fetching requests:", err);
-        setError(
-          err.response?.data?.message ||
-            "An unexpected error occurred while fetching requests"
+      if (res.data.success) {
+        const allRequests = res.data.data || [];
+
+        setRequestsReceived(
+          allRequests.filter((r) => (r.ownerId?._id || r.ownerId) === user._id)
         );
-      } finally {
-        setLoading(false);
-      }
-    };
 
+        setRequestsSent(
+          allRequests.filter((r) => (r.requesterId?._id || r.requesterId) === user._id)
+        );
+      } else {
+        setError(res.data.message || "Failed to fetch requests");
+      }
+    } catch (err) {
+      console.error("Error fetching requests:", err);
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchRequests();
   }, [user]);
 
-  // ✅ Actions
+  // ------------------------
+  // CHAT HANDLER
+  // ------------------------
+  const handleOpenChat = (request) => {
+    setSelectedRequest(request);
+    setChatOpen(true);
+  };
+
+  const handleCloseChat = () => {
+    setChatOpen(false);
+    setSelectedRequest(null);
+  };
+
+  // Request Actions
   const handleAccept = async (req) => {
     try {
       await axios.patch(`http://localhost:5000/api/request/${req._id}`, {
@@ -90,23 +101,14 @@ function Request() {
     }
   };
 
-  const handleChat = (req) => {
-    console.log("Chat with:", req.RequesterName);
-  };
-
-  const handleCall = (req) => {
-    console.log("Call to:", req.RequesterName);
-  };
-
   if (loading)
-    return (
-      <p className="text-center mt-10 text-gray-600">Loading requests...</p>
-    );
+    return <p className="text-center mt-10 text-gray-600">Loading requests...</p>;
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-8 p-4">
-      {/* 🔘 Tabs */}
+
+      {/* ---------------- Tabs ---------------- */}
       <div className="flex justify-center mb-6">
         <button
           className={`px-5 py-2 rounded-l-lg font-medium border transition-all ${
@@ -114,24 +116,24 @@ function Request() {
               ? "bg-[#24aeb1] text-white border-[#24aeb1]"
               : "bg-white text-[#24aeb1] border-[#24aeb1]"
           }`}
-          onClick={() => {setActiveTab("received");
-                  fetchRequests(); }}
+          onClick={() => setActiveTab("received")}
         >
           Requests You Received
         </button>
+
         <button
           className={`px-5 py-2 rounded-r-lg font-medium border transition-all ${
             activeTab === "sent"
               ? "bg-[#24aeb1] text-white border-[#24aeb1]"
               : "bg-white text-[#24aeb1] border-[#24aeb1]"
           }`}
-          onClick={() => {setActiveTab("sent"); fetchRequests();}}
+          onClick={() => setActiveTab("sent")}
         >
           Requests You Sent
         </button>
       </div>
 
-      {/* 🧾 Tab Content */}
+      {/* ---------------- List ---------------- */}
       <motion.div
         key={activeTab}
         initial={{ opacity: 0, y: 15 }}
@@ -139,37 +141,34 @@ function Request() {
         transition={{ duration: 0.3 }}
         className="flex flex-col items-center"
       >
-        {activeTab === "received" ? (
-          requestsReceived.length > 0 ? (
-            requestsReceived.map((req) => (
-              <RequestCard
-                key={req._id}
-                request={req}
-                onAccept={handleAccept}
-                onReject={handleReject}
-                onChat={handleChat}
-                onCall={handleCall}
-              />
+        {activeTab === "received"
+          ? requestsReceived.length > 0
+            ? requestsReceived.map((req) => (
+                <RequestCard
+                  key={req._id}
+                  request={req}
+                  onAccept={handleAccept}
+                  onReject={handleReject}
+                  onChat={handleOpenChat}
+                />
+              ))
+            : <p className="text-gray-500 mt-4">No requests received yet.</p>
+          : requestsSent.length > 0
+          ? requestsSent.map((req) => (
+              <SentRequestCard key={req._id} request={req} onChat={handleOpenChat} onCancel={handleCancel} />
             ))
-          ) : (
-            <p className="text-gray-500 mt-4">No requests received yet.</p>
-          )
-        ) : requestsSent.length > 0 ? (
-          requestsSent.map((req) => (
-            <SentRequestCard
-              key={req._id}
-              request={req}
-              onChat={handleChat}
-              onCall={handleCall}
-              onCancel={handleCancel}
-            />
-          ))
-        ) : (
-          <p className="text-gray-500 mt-4">
-            You haven’t sent any requests yet.
-          </p>
-        )}
+          : <p className="text-gray-500 mt-4">You haven’t sent any requests yet.</p>}
       </motion.div>
+
+      {/* ---------------- ChatBox ---------------- */}
+      {selectedRequest && (
+        <ChatBox
+          open={chatOpen}
+          onClose={handleCloseChat}
+          requestId={selectedRequest._id}
+          currentUser={user}
+        />
+      )}
     </div>
   );
 }
