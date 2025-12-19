@@ -6,7 +6,7 @@ const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
 const http = require("http");           
 const { Server } = require("socket.io"); 
-const Chat = require("./models/chat");  
+const Chat = require("./models/Chat");  
 
 
 cloudinary.config({ 
