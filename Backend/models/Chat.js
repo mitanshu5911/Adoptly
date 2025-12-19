@@ -24,10 +24,10 @@ const chatSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Request",
     required: true,
-    unique: true   // 🔥 ensures only ONE chat per adoption request
+    unique: true   
   },
 
-  // Two participants: Owner and Requester
+  
   participants: [
     { 
       type: mongoose.Schema.Types.ObjectId, 

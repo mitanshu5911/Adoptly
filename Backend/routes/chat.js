@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Chat = require("../models/chat");
 
-// 🟦 GET: Fetch chat messages for a specific request
+
 router.get("/getchat", async (req, res) => {
   const { requestId } = req.query;
 
@@ -51,7 +51,7 @@ router.get("/getchat", async (req, res) => {
   }
 });
 
-// 🟩 POST: Create a chat for a request (or return existing)
+
 router.post("/", async (req, res) => {
   const { requestId, participants = [] } = req.body;
 
